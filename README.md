@@ -1,2 +1,2 @@
 # NeuroEvolution
-Can a simple food-reaching cognitive ability emerge from a system of LIF neurons? 
+Can a simple food-reaching behavior emerge from an unstructured LIF cells reservoir endowed with sensory and motor neurons? 
