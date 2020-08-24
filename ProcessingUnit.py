@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from numba import vectorize, float64, int64
 
 
 ''' neural systems '''
