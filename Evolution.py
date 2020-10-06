@@ -7,6 +7,30 @@ import time
 
 
 
+''' 
+the following keywords are possible action to be done at runtime:
+
+- K_DOWN: kill all the creatures
+
+- K_RIGHT: show the neural activity of the fittest
+
+- K_3: show the weights as an image
+
+- K_7: the next generation will be a hero-only run (hero: particulary talented creatures appeared in the past)
+
+- K_9: show the species
+
+- K_s: show the scores
+
+- K_c: show the neural connectivity 
+
+- K_n: show the names of the creatures
+
+- K_LEFT: randomly change the position of the food
+
+'''
+
+
 ''' Evolution Instance '''
 
 
