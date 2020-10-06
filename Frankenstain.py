@@ -3,10 +3,12 @@ import matplotlib.pyplot as plt
 import ProcessingUnit
 
 
+''' 
+- Frankenstein -
 
-''' Frankenstein '''
+I thought the name was appropiate, in the sense that different functional component are glued together for building a -living- entity
+'''
 
-# speed neurons cut
 
 
 class Creature:
@@ -368,8 +370,7 @@ class Creature:
 
 ''' Frankenstein simulation '''
 
-test_frank = 0
-if test_frank:
+if __name__ == '__main__':
     Tmax = 2000
     Frankie = Creature(n_pool=8**2, n_premot=10, n_sight=100, n_hung=16, n_deaf=16, radius=200, hung_rate=0.0, w_mot=3)
 
@@ -388,27 +389,8 @@ if test_frank:
         Frankie.run(angle=angle, distance=distance)
 
         Frankie.neural_activity()
-        # plt.clf()
-        #
-        # plt.subplot(311)
-        # plt.plot(range(360), Frankie.AssociativeCortex.sight.curve, '-k')
-        # plt.title('Sight, angle: {} - distance: {}'.format(angle, distance))
-        # plt.ylim((0, 1.3))
-        #
-        # plt.subplot(323)
-        # plt.imshow(Frankie.AssociativeCortex.pool_spikes.reshape((8, 8)), cmap='Greys')
-        # plt.title('Pool Activity')
-        #
-        # plt.subplot(324)
-        # plt.imshow(Frankie.AssociativeCortex.hypot.spikes.T, cmap='Greys')
-        # plt.title('Hunger, {}'.format(np.around(Frankie.hunger, 2)))
-        #
-        # plt.subplot(313)
-        # plt.imshow(Frankie.MotorCortex.out_spikes, cmap='Greys')
-        # plt.title('Motor Outputs: {}'.format(Frankie.action))
-        # plt.pause(0.0001)
 
         if Frankie.life > Frankie.death:
-            print('\n++++ RIP FRANKIE ++++')
+            print('\n++++ RIP ++++')
             break
 
