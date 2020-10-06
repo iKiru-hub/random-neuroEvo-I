@@ -20,3 +20,6 @@ creation of an initial population with random connectivity weights
         
 - repeat
 
+
+
+Disclaimer: sorry for if the code looks awfully messy and informal, I will take care of cleaning it soon. This project started and will continue to be an hobby. It comes straight out of my laptop repository 
