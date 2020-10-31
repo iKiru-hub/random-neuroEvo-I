@@ -2,8 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pygame
 import Frankenstain
-import pickle
+#import pickle
 import time
+import sys
 
 
 
@@ -14,7 +15,7 @@ the following keywords are possible action to be done at runtime:
 
 - K_RIGHT: show the neural activity of the fittest
 
-- K_3: show the weights as an image
+- K_3: show the weights values as an image
 
 - K_7: the next generation will be a hero-only run (hero: particulary talented creatures appeared in the past)
 
@@ -25,6 +26,8 @@ the following keywords are possible action to be done at runtime:
 - K_c: show the neural connectivity 
 
 - K_n: show the names of the creatures
+
+- K_e: exit
 
 - K_LEFT: randomly change the position of the food
 
@@ -57,7 +60,6 @@ class BioSphere:
         self.n_sight = 60
         self.n_hung = 9
         self.n_deaf = 9
-        self.n_speed = 9
 
 
         self.matrix_vals = ((self.n_pool, self.n_pool),
@@ -65,9 +67,7 @@ class BioSphere:
                             (self.n_pool, self.n_deaf),
                             (self.n_pool, self.n_hung),
                             (self.n_premot*4, self.n_pool),
-                            (self.n_deaf, self.n_deaf),
-                            (self.n_speed, self.n_pool),
-                            (self.n_speed, self.n_speed))
+                            (self.n_deaf, self.n_deaf))
 
         # variables
         self.fittest = 0
@@ -82,7 +82,7 @@ class BioSphere:
         if not ancient_DNA[0]:
             for i in range(self.n_pop):
                 self.population.append(Frankenstain.Creature(n_pool=self.n_pool, n_premot=self.n_premot,
-                                                             n_sight=self.n_sight, n_speed=self.n_speed,
+                                                             n_sight=self.n_sight, 
                                                              n_hung=self.n_hung, n_deaf=self.n_deaf,
                                                              hung_rate=hung_rate, col=(False, 0),
                                                              radius=radius, pos=pos, birthmark='ra'))
@@ -253,7 +253,7 @@ class BioSphere:
             hero = self.heroes_pantheon[str(np.random.randint(0, self.heroes_pantheon.__len__()))]['obj']
             DNA, gen, name, gen, col = hero.DNA, hero.gen, hero.name, hero.gen, hero.color
             babyFrank = Frankenstain.Creature(n_pool=self.n_pool, n_premot=self.n_premot, n_hung=self.n_hung,
-                                              n_sight=self.n_sight, n_speed=self.n_speed,
+                                              n_sight=self.n_sight, 
                                               n_deaf=self.n_deaf, hung_rate=self.hung_rate, col=(False, 0),
                                 radius=self.radius, pos=self.pos, ext_W=self.DNA_pass(DNA), gen=gen, birthmark='')
             babyFrank.inherit_name(name=name, gen=gen, col=(True, col))
@@ -272,7 +272,7 @@ class BioSphere:
         print('hero genetic score: ', gen_score)
         if DNA:
             self.hero = Frankenstain.Creature(n_pool=self.n_pool, n_premot=self.n_premot, n_hung=self.n_hung,
-                                                  n_sight=self.n_sight, n_speed=self.n_speed,
+                                                  n_sight=self.n_sight,
                                                   n_deaf=self.n_deaf, hung_rate=self.hung_rate, col=(False, 0),
                                     radius=self.radius, pos=self.pos, ext_W=self.DNA_pass(DNA), gen=0, birthmark='_')
             self.hero.inherit_name(name='_Hero00', gen=0, col=(True, (100, 100, 250)))
@@ -281,7 +281,7 @@ class BioSphere:
 
         else:
             self.hero = Frankenstain.Creature(n_pool=self.n_pool, n_premot=self.n_premot, n_hung=self.n_hung,
-                                              n_sight=self.n_sight, n_speed=self.n_speed,
+                                              n_sight=self.n_sight, 
                                               n_deaf=self.n_deaf, hung_rate=self.hung_rate, col=(False, 0),
                                               radius=self.radius, pos=self.pos, gen=0,
                                               birthmark='_')
@@ -298,7 +298,7 @@ class BioSphere:
         # copies
         for i in range(self.n_copies):
             babyFrank = Frankenstain.Creature(n_pool=self.n_pool, n_premot=self.n_premot, n_hung=self.n_hung,
-                                              n_sight=self.n_sight, n_speed=self.n_speed,
+                                              n_sight=self.n_sight, 
                                               n_deaf=self.n_deaf, hung_rate=self.hung_rate, col=(False, 0),
                                 radius=self.radius, pos=self.pos, ext_W=self.DNA_pass(DNA), gen=gen, birthmark='C')
             babyFrank.inherit_name(name=name, gen=gen, col=(True, col))
@@ -308,7 +308,7 @@ class BioSphere:
         # copies 2
         for i in range(2):
             babyFrank = Frankenstain.Creature(n_pool=self.n_pool, n_premot=self.n_premot, n_hung=self.n_hung,
-                                              n_sight=self.n_sight, n_speed=self.n_speed,
+                                              n_sight=self.n_sight, 
                                               n_deaf=self.n_deaf, hung_rate=self.hung_rate, col=(False, 0),
                                               radius=self.radius, pos=self.pos, ext_W=self.DNA_pass(DNA2), gen=gen2,
                                               birthmark='C2')
@@ -319,13 +319,13 @@ class BioSphere:
         # brand new
         for j in range(self.n_pop - self.n_copies - self.n_rand - 2):
             new_population.append(Frankenstain.Creature(n_pool=self.n_pool, n_premot=self.n_premot, n_hung=self.n_hung,
-                                                        n_sight=self.n_sight, n_speed=self.n_speed,
+                                                        n_sight=self.n_sight, 
                                                         n_deaf=self.n_deaf, hung_rate=self.hung_rate, col=(False, 0),
                                             radius=self.radius, pos=self.pos, gen=self.generation+1, birthmark='N'))
         # mutated
         for k in range(self.n_rand):
             babyFrank = Frankenstain.Creature(n_pool=self.n_pool, n_premot=self.n_premot, n_hung=self.n_hung,
-                                                        n_sight=self.n_sight, n_speed=self.n_speed,
+                                                        n_sight=self.n_sight,
                                                         n_deaf=self.n_deaf, hung_rate=self.hung_rate, col=(True, col),
                 radius=self.radius, pos=self.pos, ext_W=self.DNA_mutation(DNA), gen=self.generation+1, birthmark='R')
             babyFrank.species = spec1
@@ -468,10 +468,6 @@ class Nature:
             in_record.close()
         else:
             ancient_guy = (False, 0)
-            # hero loading
-            in_record = open(heroname, 'rb')
-            ancient_hero_DNA = pickle.load(in_record)
-            in_record.close()
 
             ancient_hero_DNA = (False, 0)
 
@@ -643,10 +639,8 @@ class Nature:
                 creature.run(angle=a, distance=d)
 
                 # move position
-                creature.position[0] += int((self.speed * (creature.action == 0) - self.speed * (creature.action == 1)) \
-                                        * creature.SpeedCortex.speed_magnification)
-                creature.position[1] += int(self.speed * (creature.action == 2) - self.speed * (creature.action == 3) \
-                                        * creature.SpeedCortex.speed_magnification)
+                creature.position[0] += int(self.speed * (creature.action == 0) - self.speed * (creature.action == 1))
+                creature.position[1] += int(self.speed * (creature.action == 2) - self.speed * (creature.action == 3)) 
 
 
                 # draw
@@ -725,6 +719,9 @@ class Nature:
 
                 elif event.key == pygame.K_LEFT:
                     self.cake.move()
+
+                elif event.key == pygame.K_e:
+                    sys.exit()
 
 
     def rigeneration(self):
@@ -876,7 +873,7 @@ class Nature:
 
 
 if __name__ == "__main__":
-    Uranus = Nature(store=False, load=True, overwrite_hero=False, win_x=500, win_y=500, speed=6, n_pop=20,
+    Uranus = Nature(store=False, load=False, overwrite_hero=False, win_x=500, win_y=500, speed=8, n_pop=50,
                 hung_rate=0.01, radius=300, uni_w=5,
                 filename='evoCool303')
     Uranus.run_it()
