@@ -16,7 +16,10 @@ I thought the name was appropiate, in the sense that different functional compon
 class Creature:
     ''' 
     The creature has sensory visual neurons projecting to a main internal pool, which receive projections also from a default network
-    and hunger neurons; the pool then project to the motor neurons
+    and hunger neurons; the pool then project to the motor neurons.
+    
+    Note: the default and hunger network are silenced by default, because it is faster to see good individuals, feel free to change their weight values
+    to explore a larger parameter space. [w_hung, w_deaf, w_dfpool]
     '''
     def __init__(self, n_pool, n_premot, n_sight, n_hung, radius, n_deaf=36, hung_rate=0.01,
                        sparse_pool=0.05, sparse_sight=0.1, sparse_hung=0.05, sparse_deaf=0.1, sparse_intdeaf=0.3,
