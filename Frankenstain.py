@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import ProcessingUnit
+import keyboard
+import time
 
 
 ''' 
@@ -12,10 +14,14 @@ I thought the name was appropiate, in the sense that different functional compon
 
 
 class Creature:
-    def __init__(self, n_pool, n_premot, n_sight, n_hung, n_speed, radius, n_deaf=36, hung_rate=0.01,
+    ''' 
+    The creature has sensory visual neurons projecting to a main internal pool, which receive projections also from a default network
+    and hunger neurons; the pool then project to the motor neurons
+    '''
+    def __init__(self, n_pool, n_premot, n_sight, n_hung, radius, n_deaf=36, hung_rate=0.01,
                        sparse_pool=0.05, sparse_sight=0.1, sparse_hung=0.05, sparse_deaf=0.1, sparse_intdeaf=0.3,
-                       sparse_mot=0.05, sparse_intspeed=0.1, sparse_speed=0.1, w_pool=4, w_sight=25, w_hung=4, w_mot=15,
-                       wexc=5, winh=-15, w_deaf=15, w_dfpool=3, w_spdpool=1, w_speed=0.1,
+                       sparse_mot=0.05, w_pool=4, w_sight=25, w_hung=0, w_mot=15,
+                       wexc=5, winh=-15, w_deaf=0, w_dfpool=0, 
                        wave_win=200, ext_W=(), pos=(0, 0),
                        gen=0, birthmark='ra', col=(0, 0), food_gain=5):
 
@@ -33,20 +39,18 @@ class Creature:
         self.n_premot = n_premot
         self.n_sight = n_sight
         self.n_hung = n_hung
-        self.n_speed = n_speed
+
         self.n_default = n_deaf
         self.food_gain = food_gain
 
         self.sqrt_pool = int(np.sqrt(n_pool))
         self.sqrt_hung = int(np.sqrt(n_hung))
         self.sqrt_deaf = int(np.sqrt(n_deaf))
-        self.sqrt_speed = int(np.sqrt(n_speed))
 
         self.w_pool = w_pool
         self.w_sight = w_sight
         self.w_hung = w_hung
         self.w_mot = w_mot
-        self.w_speed = w_speed
         self.w_dfpool = w_dfpool
         self.w_deaf = w_deaf
         self.wexc = wexc
@@ -66,11 +70,6 @@ class Creature:
         self.weights_mot = np.random.binomial(1, sparse_mot, size=(n_premot*4, n_pool)) * np.random.uniform(0, w_mot,
                                                                                             size=(n_premot*4, n_pool))
 
-        # Speed neurons
-        #### speed ####
-        self.SpeedCortex = ProcessingUnit.SpeedNet(n=n_speed, sparseness=sparse_intspeed, maxw=w_speed)
-        self.weight_speed = np.random.binomial(1, sparse_speed, size=(n_speed, n_pool)) * np.random.uniform(-w_spdpool,
-                                                          w_spdpool, size=(n_speed, n_pool))  # speed blocked
 
         # variables
         self.life = True
@@ -138,8 +137,6 @@ class Creature:
         self.AssociativeCortex.weights_hung = wmatrix[3]
         self.weights_mot = wmatrix[4]
         self.AssociativeCortex.weights_inside_deaf = wmatrix[5]
-        self.weight_speed = wmatrix[6]
-        self.SpeedCortex.weights = wmatrix[7]
 
 
     def DNA_definition(self):
@@ -153,18 +150,14 @@ class Creature:
                     self.gene_definition(self.AssociativeCortex.weights_deaf),
                     self.gene_definition(self.AssociativeCortex.weights_hung),
                     self.gene_definition(self.weights_mot),
-                    self.gene_definition(self.AssociativeCortex.weights_inside_deaf),
-                    self.gene_definition(self.weight_speed),
-                    self.gene_definition(self.SpeedCortex.weights)]
+                    self.gene_definition(self.AssociativeCortex.weights_inside_deaf)]
 
         self.weights_structure = [self.AssociativeCortex.weights_pool,
                                   self.AssociativeCortex.weights_sight,
                                   self.AssociativeCortex.weights_deaf,
                                   self.AssociativeCortex.weights_hung,
                                   self.weights_mot,
-                                  self.AssociativeCortex.weights_inside_deaf,
-                                  self.weight_speed,
-                                  self.SpeedCortex.weights]
+                                  self.AssociativeCortex.weights_inside_deaf]
 
     def gene_definition(self, w):
         w = w.flatten()
@@ -181,8 +174,6 @@ class Creature:
         self.AssociativeCortex.run(angle=angle, distance=distance, hunger=self.hunger, Iext=self.blank_I)
 
         self.MotorCortex.run(Iexts=np.dot(self.weights_mot, self.AssociativeCortex.pool_spikes))
-
-        self.SpeedCortex.run(Iext=np.dot(self.weight_speed, self.AssociativeCortex.pool_spikes))
 
         # action definition
         self.action = (1-self.MotorCortex.out_spikes.__contains__(1)) * -1 + \
@@ -216,10 +207,6 @@ class Creature:
         self.whole_spikes[40:40+self.sqrt_deaf, -self.sqrt_deaf-15:-15] = self.AssociativeCortex.default.spikes.reshape(
             self.sqrt_deaf, self.sqrt_deaf)
 
-        # speed
-        self.whole_spikes[30:30+self.sqrt_speed, -self.sqrt_speed-10:-10] = self.SpeedCortex.spikes.reshape(
-            self.sqrt_speed, self.sqrt_speed)
-
     def weights_activity(self):
         plt.clf()
         for i, w, in enumerate(self.weights_structure):
@@ -252,6 +239,8 @@ class Creature:
 
 
     def network_connectivity(self):
+
+        plt.figure()
 
         maxwidth = 0.07
 
@@ -321,19 +310,6 @@ class Creature:
                                  w=self.AssociativeCortex.weights_inside_deaf, r=0.01, colorful=False)
 
 
-        #### speed
-        lw6, hw6 = 50, 55
-        xspeed, yspeed = np.random.uniform(lw6, hw6, size=self.n_speed), np.random.uniform(5, 10, size=self.n_speed)
-
-        # pool -> speed
-        self.display_connections(n1=self.n_speed, n2=self.n_pool, x1=xspeed, x2=xpool, y1=yspeed, y2=ypool,
-                                 w=self.weight_speed, r=maxwidth, colorful=False)
-
-        # internal
-        self.display_connections(n1=self.n_speed, n2=self.n_speed, x1=xspeed, x2=xspeed, y1=yspeed, y2=yspeed,
-                                 w=self.SpeedCortex.weights, r=maxwidth, colorful=False)
-
-
         # plot nodes
         m = 2
         plt.plot(xsight, ysight, 'ok', markersize=m)
@@ -342,7 +318,6 @@ class Creature:
         plt.plot(xmot, ymot, 'ok', markersize=m)
         plt.plot(xhung, yhung, 'ok', markersize=m)
         plt.plot(xdef, ydef, 'ok', markersize=m)
-        plt.plot(xspeed, yspeed, 'ok', markersize=m)
 
         plt.xticks(())
         plt.yticks(())
@@ -371,11 +346,12 @@ class Creature:
 ''' Frankenstein simulation '''
 
 if __name__ == '__main__':
+
     Tmax = 2000
     Frankie = Creature(n_pool=8**2, n_premot=10, n_sight=100, n_hung=16, n_deaf=16, radius=200, hung_rate=0.0, w_mot=3)
 
 
-    # target
+    # target: moving angle and random distances
     k = 5
     angles = []
     distances = []
@@ -383,14 +359,22 @@ if __name__ == '__main__':
         angles.append([u] * k)
         distances.append([np.random.randint(1, 200)] * k)
 
+    print('\nA stimulus will change angular position over time with random distance from the network.\n'
+            'The "brain" spiking is visible on the right, with the square ini the middle-upper part being the main pool.\n'
+            '\nPress < h > for display the internal connectivity (close all the windows to go on)\nPress < e > to exit\n\n'
+            )
 
     for angle, distance in zip(np.reshape(np.array(angles), angles.__len__() * k),
                                np.reshape(np.array(distances), distances.__len__() * k)):
         Frankie.run(angle=angle, distance=distance)
 
         Frankie.neural_activity()
+        if keyboard.is_pressed('h'):
 
-        if Frankie.life > Frankie.death:
+            Frankie.network_connectivity()
+  
+
+        if Frankie.life > Frankie.death or keyboard.is_pressed('e'):
             print('\n++++ RIP ++++')
             break
 
