@@ -756,9 +756,15 @@ class Nature:
         angle = 0
         distance = round(
             np.sqrt((pos[0] - cake.pos[0]) ** 2 + (pos[1] - cake.pos[1]) ** 2))
-        ang_sin = np.around(np.arcsin((pos[1] - cake.pos[1]) / distance) * (180 / np.pi))
+        try:
+            ang_sin = np.around(np.arcsin((pos[1] - cake.pos[1]) / distance) * (180 / np.pi))
+        except ZeroDivisionError:
+            ang_sin = 0
 
-        ang_cos = np.around(np.arccos((cake.pos[0] - pos[0]) / distance) * (180 / np.pi))
+        try:
+            ang_cos = np.around(np.arccos((cake.pos[0] - pos[0]) / distance) * (180 / np.pi))
+        except ZeroDivisionError:
+            ang_cos = 0
 
         if ang_sin > 0 and ang_cos < 90:
             angle = 90 - ang_sin
