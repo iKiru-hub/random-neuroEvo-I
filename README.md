@@ -14,7 +14,7 @@ creation of an initial population with random connectivity weights
 
         - same DNA as the fittest
         
-        - mutate DNA
+        - mutated DNA
         
         - brand new DNA
         
