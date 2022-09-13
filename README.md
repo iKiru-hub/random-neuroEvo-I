@@ -27,14 +27,17 @@ creation of an initial population with random connectivity weights
 
         - repeat
 
-Progress of the score over a few generations.
+Progress of the score over some generations.
 
 ![evolution_species](https://user-images.githubusercontent.com/70176926/189891758-7224fcdf-082c-4a33-8b82-bc9be8b4e085.png)
 
-Inital generations
+Inital generations, not so good [green: new dna, bright colors: mutated, others: same dna
 
 ![URANUS-2022-09-13-12-00-06](https://user-images.githubusercontent.com/70176926/189892188-58bafca9-0dd4-4747-aa53-5ad8cada260f.gif)
 
+Later generations, pretty good
+
+![evolution_fitted_gen](https://user-images.githubusercontent.com/70176926/189895775-e3b10ea0-7d9a-45f1-bda8-7bad6f506d90.gif)
 
 
 ## Run-time user actions
