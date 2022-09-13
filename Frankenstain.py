@@ -33,7 +33,7 @@ class Creature:
         self.race = 'N'
         self.species = 'orphan'
         self.gen = gen
-        self.color = (30, 30, 30)
+        self.color = (30, 80, 30)
         self.get_name(gen, birthmark, col)
 
 
@@ -120,7 +120,7 @@ class Creature:
             self.name += np.random.choice(('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
             'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'w', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'))
         if col[0]:
-            self.color = tuple(np.clip([col[1][0]+35, col[1][1]+35, col[1][2]+35], 0, 255))
+            self.color = tuple(np.clip([col[1][0]+35, col[1][1]+10, col[1][2]+35], 0, 255))
 
         if birthmark == 'R':
             self.race = 'Mutated'
