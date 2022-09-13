@@ -14,20 +14,28 @@ Can a simple food-reaching behavior emerge from an unstructured LIF cells reserv
 Evolution through natural selection:
 
 creation of an initial population with random connectivity weights
-- selection of the fittest individual (has eaten more)
-- definition of its DNA as the connectivity matrix of its brain networks (and weights values)
-- creation of a new population with individual endowed with:
 
-        - same DNA as the fittest
-        
-        - mutated DNA
-        
-        - brand new DNA
-        
-- repeat
+        - selection of the fittest individual (has eaten more)
+        - definition of its DNA as the connectivity matrix of its brain networks (and weights values)
+        - creation of a new population with individual endowed with:
+
+                - same DNA as the fittest
+
+                - mutated DNA
+
+                - brand new DNA
+
+        - repeat
+
+Progress of the score over a few generations.
+
+![evolution_species](https://user-images.githubusercontent.com/70176926/189891758-7224fcdf-082c-4a33-8b82-bc9be8b4e085.png)
+
+Inital generations
+
+![URANUS-2022-09-13-12-00-06](https://user-images.githubusercontent.com/70176926/189892188-58bafca9-0dd4-4747-aa53-5ad8cada260f.gif)
 
 
-Disclaimer: sorry for if the code looks awfully messy and informal, I will take care of cleaning it soon. This project started and will continue to be an hobby. It comes straight out of my laptop repository 
 
 ## Run-time user actions
 
@@ -54,3 +62,9 @@ the following keywords are possible action to be done at runtime:
 - K_e: exit
 
 - K_p: pruning, kill the lower half of the population based on score
+
+
+## Disclaimer
+
+
+sorry if the code looks awfully messy and informal, I will take care of cleaning it soon. This project started and will continue to be an hobby. It comes straight out of my laptop repository 
