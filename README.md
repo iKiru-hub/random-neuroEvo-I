@@ -8,6 +8,10 @@ Can a simple food-reaching behavior emerge from an unstructured LIF cells reserv
         - Hunger neurons --> main pool
 
 ![evolution_connectivity](https://user-images.githubusercontent.com/70176926/189867206-20418f13-985d-4570-bc37-492dc94efb0d.png)
+
+Below, online firing of the above structures
+
+![evolution_firings](https://user-images.githubusercontent.com/70176926/190092787-7d7a8169-d089-423b-b56e-0176dc7ee6b7.gif)
        
 ## Evolution
 
